@@ -67,3 +67,22 @@ console.log({
 
     console.log('⚡️ Bolt app is running!');
 })();
+
+
+
+const welcomeChannelId = 'C12345';
+
+app.event('member_joined_channel', async ({ event, client }) => {
+    try {
+        // Call chat.postMessage with the built-in client
+        const result = await client.chat.postMessage({
+            channel: welcomeChannelId,
+            text: `Welcome to the quiz <@${event.user.id}>!`
+        });
+        console.log(result);
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+
