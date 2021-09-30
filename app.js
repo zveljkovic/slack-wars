@@ -1,8 +1,9 @@
 const { App } = require('@slack/bolt');
-const {joinTeamCommand} = require("./join-team-command");
-const {answerCommand} = require("./answer-command");
-const {scoresCommand} = require("./scores-command");
-const {triggerQuestionCommand} = require("./trigger-question-command");
+const joinTeamCommand = require("./join-team-command");
+const answerCommand = require("./answer-command");
+const resetCommand = require("./reset-command");
+const scoresCommand = require("./scores-command");
+const triggerQuestionCommand = require("./trigger-question-command");
 require('dotenv').config();
 
 // Initializes your app with your bot token and signing secret
