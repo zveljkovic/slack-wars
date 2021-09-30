@@ -8,4 +8,7 @@ export class TeamRepository extends Repository<Team> {
     return this.query('UPDATE "Team" SET score = 0;');
   }
 
+  getAll() {
+    return this.find();
+  }
 }
