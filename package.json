@@ -5,6 +5,8 @@
   "main": "app.ts",
   "dependencies": {
     "@slack/bolt": "^3.7.0",
+    "@types/bluebird": "^3.5.36",
+    "bluebird": "^3.7.2",
     "csv-parser": "^3.0.0",
     "dotenv": "^10.0.0",
     "reflect-metadata": "^0.1.13",
