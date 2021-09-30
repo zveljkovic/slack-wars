@@ -24,5 +24,12 @@ console.log({
         await say(`Hello there <@${message.user}`)
     })
 
+    app.command('/answer', async ({ command, ack, respond }) => {
+        // Acknowledge command request
+        await ack();
+
+        await respond(`${command.text}`);
+    });
+
     console.log('⚡️ Bolt app is running!');
 })();
