@@ -12,8 +12,9 @@ import {TeamRepository} from './repositories/TeamRepository';
 import {resetCommand} from './reset-command';
 import {scoresCommand} from './scores-command';
 import {triggerQuestionCommand} from './trigger-question-command';
+import {getCustomRepository} from 'typeorm';
 
-require('dotenv').config();
+import  require('dotenv').config();
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -73,6 +74,8 @@ console.log({
 const welcomeChannelId = 'C12345';
 
 app.event('member_joined_channel', async ({ event, client }) => {
+    const teams = getCustomRepository(TeamRepository);
+
     try {
         // Call chat.postMessage with the built-in client
         const result = await client.chat.postMessage({
