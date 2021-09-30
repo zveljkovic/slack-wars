@@ -4,5 +4,6 @@ export const scoresCommand = async ({ command, ack, respond }: SlackCommandMiddl
     // Acknowledge command request
     await ack();
 
+
     await respond(`${command.text}`);
 }
