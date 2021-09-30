@@ -1,4 +1,8 @@
 const { App } = require('@slack/bolt');
+const {joinTeamCommand} = require("./join-team-command");
+const {answerCommand} = require("./answer-command");
+const {scoresCommand} = require("./scores-command");
+const {triggerQuestionCommand} = require("./trigger-question-command");
 require('dotenv').config();
 
 // Initializes your app with your bot token and signing secret
@@ -24,12 +28,15 @@ console.log({
         await say(`Hello there <@${message.user}`)
     })
 
-    app.command('/answer', async ({ command, ack, respond }) => {
-        // Acknowledge command request
-        await ack();
+    app.command('/answer', answerCommand);
 
-        await respond(`${command.text}`);
-    });
+    app.command('/jointeam', joinTeamCommand);
+
+    app.command('/scores', scoresCommand);
+
+    app.command('/trigger-question', triggerQuestionCommand);
+
+    app.command('/reset', resetCommand);
 
     console.log('⚡️ Bolt app is running!');
 })();
