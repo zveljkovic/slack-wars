@@ -1,28 +1,22 @@
 //remember to add package you use to package json
-var path = require('path');
+import path from 'path';
+import csv from 'csv-parser';
+import fs from 'fs';
 
-const csv = require('csv-parser')
-const fs = require('fs')
-const results = [];
+const parseCsv = async () => {
+  return new Promise((resolve) => {
+    const results: { Question: string; Answer: string }[] = [];
+    const filepath = path.join(__dirname, "data", "Spa_Team_s_Questions-Oggy.csv");
 
-const filedir = "data"
-const  filename =  "Spa_Team_s_Questions-Oggy.csv"
-const filepath = path.join(filedir, filename);
-
-
-
-fs.createReadStream(filepath)
-  .pipe(csv())
-  .on('data', (data) => results.push(data))
-  .on('end', () => {
-     //console.log(results[0]git["Question"]);
-     //console.log(results[0]["Answer"]);
-     
-     console.log((results))
-    
-
-    // [
-    //   { NAME: 'Daffy Duck', AGE: '24' },
-    //   { NAME: 'Bugs Bunny', AGE: '22' }
-    // ]
+    fs.createReadStream(filepath)
+      .pipe(csv())
+      .on('data', (data) => results.push(data))
+      .on('end', () => {
+        resolve(results);
+      });
   });
+}
+export const importQuestionsFromCSV = async () => {
+  const questions = await parseCsv();
+  console.log(questions);
+}

@@ -4,8 +4,10 @@ import {createConnection, getConnection} from 'typeorm';
 import {Question} from './entities/Question';
 import {Team} from './entities/Team';
 import {User} from './entities/User';
+import {importQuestionsFromCSV} from './import_questions';
 import {joinTeamCommand} from './join-team-command';
 import {answerCommand} from './answer-command';
+import {QuestionRepository} from './repositories/QuestionRepository';
 import {TeamRepository} from './repositories/TeamRepository';
 import {resetCommand} from './reset-command';
 import {scoresCommand} from './scores-command';
@@ -34,7 +36,8 @@ console.log({
     const connection = await createConnection({
         type: "sqlite",
         database: "sqlite.db",
-        entities: [Team]} as any);
+        entities: [Team, Question, User]} as any);
+
     const teamRepository = connection.getCustomRepository(TeamRepository);
     const teamCount = await teamRepository.count();
     if (teamCount === 0) {
@@ -46,9 +49,11 @@ console.log({
         teamRepository.save(greenTeam);
     }
 
-    app.message('hello', async ({message, say}) => {
-        await say(`Hello there <@${(message as any).user}`)
-    })
+    const questionRepository = connection.getCustomRepository(QuestionRepository);
+    const questionCount = await questionRepository.count();
+    if (questionCount === 0) {
+        await importQuestionsFromCSV();
+    }
 
     app.command('/answer', answerCommand);
 
