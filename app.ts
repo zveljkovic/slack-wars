@@ -43,11 +43,11 @@ console.log({
     const teamCount = await teamRepository.count();
     if (teamCount === 0) {
         const redTeam = new Team('Red');
-        teamRepository.save(redTeam);
+        await teamRepository.save(redTeam);
         const blueTeam = new Team('Blue');
-        teamRepository.save(blueTeam);
+        await teamRepository.save(blueTeam);
         const greenTeam = new Team('Green');
-        teamRepository.save(greenTeam);
+        await teamRepository.save(greenTeam);
     }
 
     const questionRepository = connection.getCustomRepository(QuestionRepository);
