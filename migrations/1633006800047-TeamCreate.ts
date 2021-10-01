@@ -3,7 +3,7 @@ import {MigrationInterface, QueryRunner} from "typeorm";
 export class TeamCreate1633006800047 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        queryRunner.query(`CREATE TABLE IF NOT EXISTS "Team"
+        queryRunner.query(`CREATE TABLE IF NOT EXISTS "team"
             (
                 id "uuid" NOT NULL,
                 "teamName" "text" NOT NULL,
