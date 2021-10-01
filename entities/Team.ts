@@ -12,17 +12,8 @@ export class Team {
   @Column('int')
   score!: number;
 
-
-  @OneToMany(type => User, user => user.id, {persistence: false})
-  @JoinColumn({
-    name: 'userId',
-    referencedColumnName: 'id'
-  })
-  public users: User[]
-
   constructor(teamName: string) {
     this.teamName = teamName;
     this.score = 0;
-    this.users = [];
   }
 }

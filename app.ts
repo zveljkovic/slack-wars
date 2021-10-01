@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {App} from '@slack/bolt';
+import bluebird from 'bluebird';
 import {createConnection, getConnection} from 'typeorm';
 import {Question} from './entities/Question';
 import {Team} from './entities/Team';
@@ -15,7 +16,7 @@ import {triggerQuestionCommand} from './trigger-question-command';
 import {getCustomRepository} from 'typeorm';
 import {UserRepository} from './repositories/UserRepository';
 
-import  ('dotenv').config();
+require('dotenv').config();
 
 
 
@@ -72,10 +73,6 @@ console.log({
     console.log('⚡️ Bolt app is running!');
 })();
 
-
-
-const welcomeChannelId = 'C12345';
-
 app.event('member_joined_channel', async ({ event, client }) => {
     const userRepository = getCustomRepository(UserRepository);
     const teamRepository = getCustomRepository(TeamRepository);
@@ -85,32 +82,29 @@ app.event('member_joined_channel', async ({ event, client }) => {
     let user = await userRepository.getBySlackId(event.user);
 
     if(!user){
-
-        let teamWithFewestUsersId = '', numberOfUsers = 0;
-        teams.forEach(x => {
-            if(numberOfUsers === 0){
-                numberOfUsers = x.users.length;
-            }
-
-            if(x.users.length <= numberOfUsers){
-                teamWithFewestUsersId = x.id;
-            }
-        })
-
          user = new User();
          user.slackId = event.user;
-         user.teamId = teamWithFewestUsersId;
          user.score = 0;
-        userRepository.save(user);
     }
 
+    let teamWithFewestUsersId = '';
+    let numberOfUsers = 100000000;
+
+    await bluebird.each(teams, async (x) => {
+        const teamUserCount = await userRepository.countUsersInTeam(x.id);
+        if(teamUserCount <= numberOfUsers) {
+            numberOfUsers = teamUserCount;
+            teamWithFewestUsersId = x.id;
+        }
+    })
+    user.teamId = teamWithFewestUsersId;
+    await userRepository.save(user);
+
     try {
-        // Call chat.postMessage with the built-in client
         const result = await client.chat.postMessage({
-            channel: welcomeChannelId,
-            text: `Welcome to the quiz <@${event.user.id}>!`
+            channel: event.channel,
+            text: `<@${event.user}> welcome to Slack Wars!`
         });
-        console.log(result);
     }
     catch (error) {
         console.error(error);

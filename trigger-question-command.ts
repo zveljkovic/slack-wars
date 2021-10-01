@@ -12,4 +12,5 @@ export const triggerQuestionCommand = async ({ command, ack, say }: SlackCommand
     runData.currentQuestion = question.question;
     runData.currentAnswer = question.answer;
     runData.currentPoints = 7;
+    runData.membersWithCorrectAnswer.length = 0;
 }

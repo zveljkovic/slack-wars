@@ -7,7 +7,11 @@ export class UserRepository extends Repository<User> {
     return this.findOne({where: {slackId}});
   }
 
+  countUsersInTeam(teamId: string) {
+    return this.count({where: {teamId}});
+  }
+
   addUser(entity: User){
-    return this.save(User);
+    return this.save(entity);
   }
 }
