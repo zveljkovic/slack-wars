@@ -13,8 +13,11 @@ import {resetCommand} from './reset-command';
 import {scoresCommand} from './scores-command';
 import {triggerQuestionCommand} from './trigger-question-command';
 import {getCustomRepository} from 'typeorm';
+import {UserRepository} from './repositories/UserRepository';
 
-import  require('dotenv').config();
+import  ('dotenv').config();
+
+
 
 // Initializes your app with your bot token and signing secret
 const app = new App({
@@ -74,7 +77,32 @@ console.log({
 const welcomeChannelId = 'C12345';
 
 app.event('member_joined_channel', async ({ event, client }) => {
-    const teams = getCustomRepository(TeamRepository);
+    const userRepository = getCustomRepository(UserRepository);
+    const teamRepository = getCustomRepository(TeamRepository);
+    const teams = await teamRepository.getAll();
+
+
+    let user = await userRepository.getBySlackId(event.user);
+
+    if(!user){
+
+        let teamWithFewestUsersId = '', numberOfUsers = 0;
+        teams.forEach(x => {
+            if(numberOfUsers === 0){
+                numberOfUsers = x.users.length;
+            }
+
+            if(x.users.length <= numberOfUsers){
+                teamWithFewestUsersId = x.id;
+            }
+        })
+
+         user = new User();
+         user.slackId = event.user;
+         user.teamId = teamWithFewestUsersId;
+         user.score = 0;
+        userRepository.save(user);
+    }
 
     try {
         // Call chat.postMessage with the built-in client

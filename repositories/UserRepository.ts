@@ -6,4 +6,8 @@ export class UserRepository extends Repository<User> {
   getBySlackId(slackId: string) {
     return this.findOne({where: {slackId}});
   }
+
+  addUser(entity: User){
+    return this.save(User);
+  }
 }
