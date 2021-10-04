@@ -73,7 +73,7 @@ console.log({
     console.log('⚡️ Bolt app is running!');
 })();
 
-app.event('member_joined_channel', async ({ event, client }) => {
+app.event('member_joined_channel', async ({ event, client, say }) => {
     const userRepository = getCustomRepository(UserRepository);
     const teamRepository = getCustomRepository(TeamRepository);
     const teams = await teamRepository.getAll();
@@ -99,12 +99,17 @@ app.event('member_joined_channel', async ({ event, client }) => {
     })
     user.teamId = teamWithFewestUsersId;
     await userRepository.save(user);
+    const team = await teamRepository.getOneById(user.teamId);
+    if (!team) {
+        throw new Error('Unknown team');
+    }
 
     try {
         const result = await client.chat.postMessage({
             channel: event.channel,
-            text: `<@${event.user}> welcome to Slack Wars!`
+            text: `<@${event.user}> welcome to Slack Wars - ${team.teamName} team! Please see the last question or wait for a new one.`
         });
+        const result2 = await say(`Answer is submitted with "/answer your answer" and you can check the scores with "/scores"`);
     }
     catch (error) {
         console.error(error);
